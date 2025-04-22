@@ -1,9 +1,10 @@
 [project]
 name = "docker-chromadb-lab"
 version = "0.1.0"
-description = "A lab for experimenting with ChromaDB in Docker"
-requires-python = ">=3.8"
-dependencies = ["chromadb", "numpy"]
+description = "A lab environment for experimenting with ChromaDB in Docker"
+authors = [{ name = "Emiiano Frigo" }]
+dependencies = ["chromadb==1.0.6", "numpy==2.0.2"]
+requires-python = ">=3.9"
 
 [project.optional-dependencies]
 dev = ["black==24.3.0", "isort==5.10.1", "pylint==3.0.3", "pre-commit==3.6.0"]

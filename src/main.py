@@ -64,9 +64,14 @@ results = collection.get(
 )
 
 # Print results in a readable format
-print("Results retrieved from ChromaDB:")
-for i, (doc_id, doc, meta) in enumerate(
-    zip(results["ids"], results["documents"], results["metadatas"])
+print("\nResults retrieved from ChromaDB:")
+for i, (doc_id, doc, meta, embedding) in enumerate(
+    zip(
+        results["ids"],
+        results["documents"],
+        results["metadatas"],
+        results["embeddings"]
+    )
 ):
     print(f"\nDocument {i+1}:")
     print(f"ID: {doc_id}")
@@ -74,4 +79,6 @@ for i, (doc_id, doc, meta) in enumerate(
     print("Metadata:")
     for key, value in meta.items():
         print(f"  {key}: {value}")
+    print("Embedding (first 5 dimensions):")
+    print(f"  {embedding[:5]}...")
     print("-" * 50)

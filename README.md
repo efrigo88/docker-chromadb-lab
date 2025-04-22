@@ -31,14 +31,14 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:efrigo88/docker-chromadb-lab.git
    cd docker-chromadb-lab
    ```
 
 2. Build and start the containers:
 
    ```bash
-   make rebuild
+   docker compose up -d --build
    ```
 
 3. View logs:
@@ -65,14 +65,6 @@ The application includes sample data about AI and ML topics:
 3. SentenceTransformers
 4. OpenAI API
 5. RAG (Retrieval-Augmented Generation)
-
-## Troubleshooting
-
-If you encounter connection issues:
-
-1. Check if ChromaDB is running: `make ps`
-2. View logs: `make logs`
-3. Rebuild containers: `make rebuild`
 
 ## License
 
