@@ -1,35 +1,78 @@
-# ChromaDB Lab
+# Docker ChromaDB Lab
 
-This project demonstrates how to run ChromaDB in a Docker container and insert files into it.
+A simple lab environment for experimenting with ChromaDB in Docker.
+
+## Project Structure
+
+```
+.
+├── docker-compose.yml    # Docker Compose configuration
+├── Makefile             # Helper commands
+├── requirements.txt     # Python dependencies
+└── src/
+    └── main.py         # Main application code
+```
+
+## Features
+
+- ChromaDB server running in a Docker container
+- Python application with sample data
+- Automatic retry mechanism for collection creation
+- Formatted output of retrieved data
 
 ## Prerequisites
 
 - Docker
-- Python 3.8+
-- UV package manager
+- Docker Compose
+- Make (optional, for using Makefile commands)
 
-## Setup
+## Getting Started
 
-1. Clone this repository
-2. Install dependencies using UV:
+1. Clone the repository:
+
    ```bash
-   uv pip install -r requirements.txt
-   ```
-3. Run the Docker container:
-   ```bash
-   docker-compose up -d
-   ```
-4. Run the Python script to insert files:
-   ```bash
-   python src/main.py
+   git clone <repository-url>
+   cd docker-chromadb-lab
    ```
 
-## Project Structure
+2. Build and start the containers:
 
-- `src/` - Contains the main Python code
-- `data/` - Directory for files to be inserted into ChromaDB
-- `docker-compose.yml` - Docker configuration for ChromaDB
-- `requirements.txt` - Python dependencies
+   ```bash
+   make rebuild
+   ```
+
+3. View logs:
+   ```bash
+   make logs
+   ```
+
+## Available Commands
+
+- `make up` - Start containers
+- `make down` - Stop containers
+- `make build` - Build containers
+- `make rebuild` - Rebuild and restart containers
+- `make logs` - View container logs
+- `make ps` - Check container status
+- `make clean` - Remove containers and volumes
+
+## Sample Data
+
+The application includes sample data about AI and ML topics:
+
+1. ChromaDB overview
+2. Vector databases
+3. SentenceTransformers
+4. OpenAI API
+5. RAG (Retrieval-Augmented Generation)
+
+## Troubleshooting
+
+If you encounter connection issues:
+
+1. Check if ChromaDB is running: `make ps`
+2. View logs: `make logs`
+3. Rebuild containers: `make rebuild`
 
 ## License
 

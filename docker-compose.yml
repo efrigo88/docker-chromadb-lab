@@ -1,10 +1,29 @@
 services:
-  chroma:
-    image: chromadb/chroma:latest
-    container_name: chroma
-    ports:
-      - "8000:8000"
-    environment:
-      - IS_PERSISTENT=TRUE
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: app
     volumes:
-      - ./chroma-data:/chroma/chroma
+      - ./:/app/
+    depends_on:
+      - chroma
+    networks:
+      - net
+
+  chroma:
+    image: ghcr.io/chroma-core/chroma:latest
+    volumes:
+      - index_data:/chroma/.chroma/index
+    ports:
+      - 8000:8000
+    networks:
+      - net
+
+volumes:
+  index_data:
+    driver: local
+
+networks:
+  net:
+    driver: bridge
