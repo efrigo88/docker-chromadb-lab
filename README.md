@@ -8,7 +8,7 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 .
 ├── docker-compose.yml    # Docker Compose configuration
 ├── Makefile             # Helper commands
-├── requirements.txt     # Python dependencies
+├── pyproject.toml       # Python project configuration
 └── src/
     └── main.py         # Main application code
 ```
@@ -18,7 +18,10 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 - ChromaDB server running in a Docker container
 - Python application with sample data
 - Automatic retry mechanism for collection creation
-- Formatted output of retrieved data
+- Formatted output of retrieved data including:
+  - Document content
+  - Metadata
+  - Vector embeddings (first 5 dimensions)
 
 ## Prerequisites
 
@@ -65,6 +68,19 @@ The application includes sample data about AI and ML topics:
 3. SentenceTransformers
 4. OpenAI API
 5. RAG (Retrieval-Augmented Generation)
+
+Each document includes:
+- Unique ID
+- Content text
+- Metadata (topic and source)
+- Vector embedding
+
+## Troubleshooting
+
+If you encounter connection issues:
+1. Check if ChromaDB is running: `make ps`
+2. View logs: `make logs`
+3. Rebuild containers: `make rebuild`
 
 ## License
 
