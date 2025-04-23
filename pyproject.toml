@@ -3,7 +3,12 @@ name = "docker-chromadb-lab"
 version = "0.1.0"
 description = "A lab environment for experimenting with ChromaDB in Docker"
 authors = [{ name = "Emiiano Frigo" }]
-dependencies = ["chromadb==1.0.6", "numpy==2.0.2"]
+dependencies = [
+    "chromadb==1.0.6",
+    "numpy==2.0.2",
+    "sentence-transformers==4.1.0",
+    "docling==2.30.0",
+]
 requires-python = ">=3.9"
 
 [project.optional-dependencies]
