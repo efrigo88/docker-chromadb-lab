@@ -1,6 +1,6 @@
-# Docker ChromaDB Lab
+# PDF Text Analysis with ChromaDB
 
-A simple lab environment for experimenting with ChromaDB in Docker.
+This project demonstrates how to process PDF documents, extract text, and perform semantic search using ChromaDB and Sentence Transformers.
 
 ## Project Structure
 
@@ -9,18 +9,57 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 ├── docker-compose.yml    # Docker Compose configuration
 ├── Makefile             # Helper commands
 ├── pyproject.toml       # Python project configuration
-└── main.py             # Main application code
+├── main.py             # Main application code
+└── sample.pdf          # Sample PDF for testing
 ```
 
 ## Features
 
-- ChromaDB server running in a Docker container
-- Python application with sample data
-- Automatic retry mechanism for collection creation
-- Formatted output of retrieved data including:
-  - Document content
-  - Metadata
-  - Vector embeddings (first 5 dimensions)
+- PDF text extraction using Docling
+- Text chunking with configurable chunk size
+- Semantic search using Sentence Transformers
+- Multiple query testing capabilities
+- Metadata tracking for each text chunk
+
+## Recent Changes
+
+1. **Improved Text Chunking**
+
+   - Implemented fixed-size chunking (500 characters)
+   - Added chunk size metadata
+   - Better text boundary handling
+
+2. **Enhanced Query System**
+
+   - Added multiple query testing
+   - Improved query formatting
+   - Better result presentation
+
+3. **Code Quality Improvements**
+   - Fixed line length issues
+   - Improved code formatting
+   - Better error handling
+
+## How It Works
+
+1. **Document Processing**
+
+   - PDF is loaded and converted using Docling
+   - Text is extracted and split into manageable chunks
+   - Each chunk is embedded using Sentence Transformers
+
+2. **Storage**
+
+   - Chunks are stored in ChromaDB with:
+     - Unique IDs
+     - Text content
+     - Pre-computed embeddings
+     - Metadata (source, index, size)
+
+3. **Search**
+   - Multiple queries can be tested
+   - Results are ranked by semantic similarity
+   - Top matches are displayed with context
 
 ## Prerequisites
 
@@ -58,22 +97,37 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 - `make ps` - Check container status
 - `make clean` - Remove containers and volumes
 
-## Sample Data
+## Requirements
 
-The application includes sample data about AI and ML topics:
+- Python 3.9+
+- chromadb
+- docling
+- sentence-transformers
 
-1. ChromaDB overview
-2. Vector databases
-3. SentenceTransformers
-4. OpenAI API
-5. RAG (Retrieval-Augmented Generation)
+## Usage
 
-Each document includes:
+1. Place your PDF in the project directory
+2. Update `SOURCE_PATH` in `main.py` if needed
+3. Run the script:
+   ```bash
+   python main.py
+   ```
 
-- Unique ID
-- Content text
-- Metadata (topic and source)
-- Vector embedding
+## Example Queries
+
+The system currently tests these questions:
+
+- Purpose and typography information
+- Required characteristics
+- Typography evaluation benefits
+- Specific requirements
+
+## Future Improvements
+
+- Implement sentence-based chunking
+- Add query expansion
+- Include page number metadata
+- Add result scoring display
 
 ## Troubleshooting
 
@@ -82,7 +136,3 @@ If you encounter connection issues:
 1. Check if ChromaDB is running: `make ps`
 2. View logs: `make logs`
 3. Rebuild containers: `make rebuild`
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
