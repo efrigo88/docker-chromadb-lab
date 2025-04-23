@@ -21,7 +21,7 @@ CHUNK_SIZE = 500  # characters per chunk
 chunks = []
 for text in text_content:
     for i in range(0, len(text), CHUNK_SIZE):
-        chunk = text[i : i + CHUNK_SIZE].strip()
+        chunk = text[i:i + CHUNK_SIZE].strip()
         if chunk:  # Only add non-empty chunks
             chunks.append(chunk)
 
