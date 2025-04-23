@@ -4,27 +4,38 @@ from chromadb.config import Settings
 sample_data = [
     {
         "id": "1",
-        "document": "ChromaDB is a vector database designed for AI applications.",
+        "document": (
+            "ChromaDB is a vector database designed for AI applications."
+        ),
         "metadata": {"topic": "AI", "source": "docs"},
     },
     {
         "id": "2",
-        "document": "Vector databases store embeddings and enable semantic search.",
+        "document": (
+            "Vector databases store embeddings and enable semantic search."
+        ),
         "metadata": {"topic": "databases", "source": "blog"},
     },
     {
         "id": "3",
-        "document": "SentenceTransformers can be used to generate embeddings locally.",
+        "document": (
+            "SentenceTransformers can be used to generate embeddings locally."
+        ),
         "metadata": {"topic": "ML", "source": "notebook"},
     },
     {
         "id": "4",
-        "document": "OpenAI provides API access to powerful language models.",
+        "document": (
+            "OpenAI provides API access to powerful language models."
+        ),
         "metadata": {"topic": "NLP", "source": "api"},
     },
     {
         "id": "5",
-        "document": "Retrieval-Augmented Generation (RAG) combines retrieval and generation steps in LLM pipelines.",
+        "document": (
+            "Retrieval-Augmented Generation (RAG) combines retrieval and "
+            "generation steps in LLM pipelines."
+        ),
         "metadata": {"topic": "RAG", "source": "paper"},
     },
 ]
@@ -35,11 +46,11 @@ client = chromadb.HttpClient(
     settings=Settings(allow_reset=True, anonymized_telemetry=False),
 )
 
-collection_status = False
-while collection_status != True:
+COLLECTION_STATUS = False
+while COLLECTION_STATUS is not True:
     try:
         collection = client.get_or_create_collection(name="my_collection")
-        collection_status = True
+        COLLECTION_STATUS = True
     except chromadb.errors.ChromaError:
         pass
 
@@ -70,7 +81,7 @@ for i, (doc_id, doc, meta, embedding) in enumerate(
         results["ids"],
         results["documents"],
         results["metadatas"],
-        results["embeddings"]
+        results["embeddings"],
     )
 ):
     print(f"\nDocument {i+1}:")

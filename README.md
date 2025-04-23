@@ -9,8 +9,7 @@ A simple lab environment for experimenting with ChromaDB in Docker.
 ├── docker-compose.yml    # Docker Compose configuration
 ├── Makefile             # Helper commands
 ├── pyproject.toml       # Python project configuration
-└── src/
-    └── main.py         # Main application code
+└── main.py             # Main application code
 ```
 
 ## Features
@@ -70,6 +69,7 @@ The application includes sample data about AI and ML topics:
 5. RAG (Retrieval-Augmented Generation)
 
 Each document includes:
+
 - Unique ID
 - Content text
 - Metadata (topic and source)
@@ -78,6 +78,7 @@ Each document includes:
 ## Troubleshooting
 
 If you encounter connection issues:
+
 1. Check if ChromaDB is running: `make ps`
 2. View logs: `make logs`
 3. Rebuild containers: `make rebuild`
