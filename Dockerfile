@@ -16,4 +16,4 @@ RUN uv pip install --system -e .
 COPY . .
 
 # The command to run your script
-CMD ["python", "./main.py"]
+CMD ["python", "-m", "src.main"]

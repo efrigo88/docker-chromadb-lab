@@ -7,9 +7,14 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ```
 .
 ├── docker-compose.yml    # Docker Compose configuration
+├── Dockerfile           # Docker configuration
 ├── Makefile             # Helper commands
 ├── pyproject.toml       # Python project configuration
-├── main.py             # Main application code
+├── src/                 # Source code directory
+│   ├── __init__.py     # Package initialization
+│   ├── config.py       # Configuration constants
+│   ├── helpers.py      # Helper functions
+│   └── main.py         # Main application code
 └── sample.pdf          # Sample PDF for testing
 ```
 
@@ -23,19 +28,22 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 
 ## Recent Changes
 
-1. **Improved Text Chunking**
+1. **Improved Project Structure**
+   - Organized code into `src` package
+   - Separated configuration into `config.py`
+   - Better code organization and maintainability
 
+2. **Improved Text Chunking**
    - Implemented fixed-size chunking (500 characters)
    - Added chunk size metadata
    - Better text boundary handling
 
-2. **Enhanced Query System**
-
+3. **Enhanced Query System**
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
 
-3. **Code Quality Improvements**
+4. **Code Quality Improvements**
    - Fixed line length issues
    - Improved code formatting
    - Better error handling
@@ -43,13 +51,11 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## How It Works
 
 1. **Document Processing**
-
    - PDF is loaded and converted using Docling
    - Text is extracted and split into manageable chunks
    - Each chunk is embedded using Sentence Transformers
 
 2. **Storage**
-
    - Chunks are stored in ChromaDB with:
      - Unique IDs
      - Text content
@@ -70,14 +76,12 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## Getting Started
 
 1. Clone the repository:
-
    ```bash
    git clone git@github.com:efrigo88/docker-chromadb-lab.git
    cd docker-chromadb-lab
    ```
 
 2. Build and start the containers:
-
    ```bash
    docker compose up -d --build
    ```
@@ -107,10 +111,10 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## Usage
 
 1. Place your PDF in the project directory
-2. Update `SOURCE_PATH` in `main.py` if needed
+2. Update `SOURCE_PATH` in `src/config.py` if needed
 3. Run the script:
    ```bash
-   python main.py
+   python -m src.main
    ```
 
 ## Example Queries
