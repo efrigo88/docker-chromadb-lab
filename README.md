@@ -11,7 +11,7 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 │   └── questions_answers.json # Query results with similarity scores
 ├── src/                       # Source code
 │   ├── __init__.py
-│   ├── config.py             # Configuration settings
+│   ├── queries.py            # Predefined queries for testing
 │   ├── helpers.py            # Utility functions
 │   └── main.py               # Main script
 ├── docker-compose.yml        # Docker Compose configuration
@@ -90,34 +90,35 @@ The similarity scores represent how closely the retrieved text matches the seman
 
 ## Recent Changes
 
-1. **Query Results Enhancement**
+1. **Code Simplification**
+
+   - Removed default parameters for better clarity
+   - Simplified function signatures
+   - Improved type annotations
+   - Better code organization
+
+2. **Query Results Enhancement**
 
    - Added similarity scores to query results
    - Improved result ranking based on semantic similarity
    - Structured JSON output for better analysis
 
-2. **Improved Project Structure**
+3. **Improved Project Structure**
 
    - Organized code into `src` package
-   - Separated configuration into `config.py`
+   - Separated queries file into `queries.py`
    - Better code organization and maintainability
 
-3. **Improved Text Chunking**
+4. **Improved Text Chunking**
 
-   - Implemented fixed-size chunking (500 characters)
+   - Implemented fixed-size chunking
    - Added chunk size metadata
    - Better text boundary handling
 
-4. **Enhanced Query System**
-
+5. **Enhanced Query System**
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
-
-5. **Code Quality Improvements**
-   - Fixed line length issues
-   - Improved code formatting
-   - Better error handling
 
 ## How It Works
 
@@ -186,7 +187,7 @@ The similarity scores represent how closely the retrieved text matches the seman
 ## Usage
 
 1. Place your PDF in the project directory
-2. Update `SOURCE_PATH` in `src/config.py` if needed
+2. Update `FILE_PATH` in `src/main.py` if needed
 3. Run the script:
    ```bash
    python -m src.main

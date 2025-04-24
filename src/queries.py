@@ -1,10 +1,4 @@
-"""Configuration constants for the application."""
-
-# File paths
-SOURCE_PATH = "./sample2.pdf"
-
-# Processing settings
-CHUNK_SIZE = 100
+"""Queries to be used for the application."""
 
 # Query settings
 # QUERIES = [

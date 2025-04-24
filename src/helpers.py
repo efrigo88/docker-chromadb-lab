@@ -8,15 +8,13 @@ from docling.datamodel.document import InputDocument
 from docling.document_converter import DocumentConverter
 from sentence_transformers import SentenceTransformer
 
-from .config import CHUNK_SIZE, SOURCE_PATH, QUERIES
-
 
 def prepare_json_data(
     chunks: List[str],
     ids: List[str],
     metadatas: List[Dict[str, Any]],
     embeddings: List[List[float]],
-    source_path: str = SOURCE_PATH,
+    source_path: str,
 ) -> Dict[str, Any]:
     """Prepare data in json format."""
     return {
@@ -69,7 +67,7 @@ def get_collection(client: chromadb.HttpClient) -> chromadb.Collection:
     return collection
 
 
-def parse_pdf(source_path: str = SOURCE_PATH) -> InputDocument:
+def parse_pdf(source_path: str) -> InputDocument:
     """Parse the PDF document using DocumentConverter."""
     converter = DocumentConverter()
     result = converter.convert(source_path)
@@ -85,9 +83,7 @@ def get_text_content(doc: InputDocument) -> List[str]:
     ]
 
 
-def get_chunks(
-    text_content: List[str], chunk_size: int = CHUNK_SIZE
-) -> List[str]:
+def get_chunks(text_content: List[str], chunk_size: int) -> List[str]:
     """Split text content into chunks of specified size."""
     chunks = []
     for text in text_content:
@@ -100,13 +96,15 @@ def get_chunks(
     return chunks
 
 
-def get_ids(chunks: List[str], source_path: str = SOURCE_PATH) -> List[str]:
+def get_ids(chunks: List[str], source_path: str) -> List[str]:
     """Generate unique IDs for each chunk."""
     return [f"{source_path}_chunk_{i}" for i in range(len(chunks))]
 
 
 def get_metadata(
-    chunks: List[str], doc: InputDocument, source_path: str = SOURCE_PATH
+    chunks: List[str],
+    doc: InputDocument,
+    source_path: str,
 ) -> List[Dict[str, Any]]:
     """Generate metadata for each chunk."""
     return [
@@ -131,12 +129,9 @@ def get_embeddings(
 def prepare_queries(
     collection: chromadb.Collection,
     model: SentenceTransformer,
-    queries: List[str] = None,
+    queries: List[str],
 ) -> Dict[str, Any]:
     """Run queries and prepare results in json format."""
-    if queries is None:
-        queries = QUERIES
-
     timestamp = datetime.now().isoformat()
     all_results = []
 

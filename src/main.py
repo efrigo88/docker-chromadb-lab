@@ -14,23 +14,28 @@ from .helpers import (
     save_json_data,
 )
 
+from .queries import QUERIES
+
+FILE_PATH = "./sample2.pdf"
+CHUNK_SIZE = 100
+
 
 def main() -> None:
     """Main function to process PDF, store in ChromaDB, and run queries."""
-    doc = parse_pdf()
+    doc = parse_pdf(FILE_PATH)
     text_content = get_text_content(doc)
     print("✅ Text content generated.")
 
-    chunks = get_chunks(text_content)
-    ids = get_ids(chunks)
-    metadatas = get_metadata(chunks, doc)
+    chunks = get_chunks(text_content, CHUNK_SIZE)
+    ids = get_ids(chunks, FILE_PATH)
+    metadatas = get_metadata(chunks, doc, FILE_PATH)
     print("✅ Chunks, IDs and Metadatas generated.")
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")
 
-    data = prepare_json_data(chunks, ids, metadatas, embeddings)
+    data = prepare_json_data(chunks, ids, metadatas, embeddings, FILE_PATH)
     save_json_data(data, "./data/data.json")
     print("✅ Saved data to ./data/data.json")
 
@@ -41,7 +46,7 @@ def main() -> None:
     )
     print(f"✅ Stored {len(chunks)} chunks in ChromaDB.")
 
-    questions_answers = prepare_queries(collection, model)
+    questions_answers = prepare_queries(collection, model, QUERIES)
     save_json_data(questions_answers, "./data/questions_answers.json")
     print("✅ Saved questions and answers to ./data/questions_answers.json")
     print("✅ Process completed!")
