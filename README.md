@@ -6,9 +6,10 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 
 ```
 .
-├── data/                     # Directory for data files
-│   └── data.json             # Sample json ouptut file
-├── src/                      # Source code
+├── data/                      # Directory for data files
+│   ├── data.json              # Sample json data output
+│   └── questions_answers.json # Query results with similarity scores
+├── src/                       # Source code
 │   ├── __init__.py
 │   ├── config.py             # Configuration settings
 │   ├── helpers.py            # Utility functions
@@ -20,6 +21,8 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ```
 
 ## Data Output Format
+
+### Document Chunks
 
 The project generates a JSON file containing document chunks and their embeddings. The output format is as follows:
 
@@ -44,15 +47,37 @@ The project generates a JSON file containing document chunks and their embedding
 }
 ```
 
-### Key Features of the Output
+### Query Results
 
-- **Source**: Original document path
-- **Timestamp**: When the file was generated
-- **Chunks**: Array of document segments containing:
-  - **id**: Unique identifier for the chunk
-  - **text**: The actual text content
-  - **metadata**: Additional information about the chunk
-  - **embedding**: Vector representation of the text
+Query results are saved in a separate JSON file with similarity scores:
+
+```json
+{
+  "queries": [
+    {
+      "query": "your question here",
+      "timestamp": "2024-03-21T12:34:56.789012",
+      "results": [
+        {
+          "text": "Retrieved text chunk",
+          "similarity": 0.95 // Cosine similarity score
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Understanding Similarity Scores
+
+The similarity scores represent how closely the retrieved text matches the semantic meaning of your query:
+
+- Scores are cosine similarity values between query and document embeddings
+- Range: Typically between -1 and 1
+  - 1.0: Perfect semantic match
+  - 0: No similarity
+  - Negative values: Opposite meanings
+- Results are ranked by similarity, with higher scores indicating better matches
 
 ## Features
 
@@ -61,28 +86,35 @@ The project generates a JSON file containing document chunks and their embedding
 - Semantic search using Sentence Transformers
 - Multiple query testing capabilities
 - Metadata tracking for each text chunk
+- Query results with similarity scores
 
 ## Recent Changes
 
-1. **Improved Project Structure**
+1. **Query Results Enhancement**
+
+   - Added similarity scores to query results
+   - Improved result ranking based on semantic similarity
+   - Structured JSON output for better analysis
+
+2. **Improved Project Structure**
 
    - Organized code into `src` package
    - Separated configuration into `config.py`
    - Better code organization and maintainability
 
-2. **Improved Text Chunking**
+3. **Improved Text Chunking**
 
    - Implemented fixed-size chunking (500 characters)
    - Added chunk size metadata
    - Better text boundary handling
 
-3. **Enhanced Query System**
+4. **Enhanced Query System**
 
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
 
-4. **Code Quality Improvements**
+5. **Code Quality Improvements**
    - Fixed line length issues
    - Improved code formatting
    - Better error handling
