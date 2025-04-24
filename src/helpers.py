@@ -120,21 +120,36 @@ def get_metadata(
     ]
 
 
-def run_queries(
+def prepare_queries(
     collection: chromadb.Collection,
     model: SentenceTransformer,
     queries: List[str] = None,
-) -> None:
-    """Run queries against the collection and print results."""
+) -> Dict[str, Any]:
+    """Run queries and prepare results in json format."""
     if queries is None:
         queries = QUERIES
+
+    timestamp = datetime.now().isoformat()
+    all_results = []
+
     for query in queries:
         query_embedding = model.encode(query).tolist()
         results = collection.query(
             query_embeddings=[query_embedding], n_results=3
         )
-        print(f"\n❓ Question: {query}")
-        print("\n🔍 Top matches:")
-        for doc in results["documents"][0]:
-            print("-", doc[:200], "...\n")  # Print first 200 characters
-        print("-" * 50)
+        query_result = {
+            "query": query,
+            "timestamp": timestamp,
+            "results": [
+                {
+                    "text": doc,
+                    "similarity": sim,
+                }
+                for doc, sim in zip(
+                    results["documents"][0], results["distances"][0]
+                )
+            ],
+        }
+        all_results.append(query_result)
+
+    return {"queries": all_results}

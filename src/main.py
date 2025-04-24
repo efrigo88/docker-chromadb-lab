@@ -8,7 +8,7 @@ from .helpers import (
     get_chunks,
     get_ids,
     get_metadata,
-    run_queries,
+    prepare_queries,
     prepare_json_data,
     save_json_data,
 )
@@ -40,7 +40,9 @@ def main() -> None:
     )
     print(f"✅ Stored {len(chunks)} chunks in ChromaDB.")
 
-    run_queries(collection, model)
+    questions_answers = prepare_queries(collection, model)
+    save_json_data(questions_answers, "./data/questions_answers.json")
+    print("✅ Saved questions and answers to ./data/questions_answers.json")
     print("✅ Process completed!")
 
 

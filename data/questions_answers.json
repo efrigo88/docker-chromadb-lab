@@ -1,0 +1,94 @@
+{
+  "queries": [
+    {
+      "query": "Who are the crazy ones?",
+      "timestamp": "2025-04-24T13:41:05.497050",
+      "results": [
+        {
+          "text": "While some see them as the crazy ones, we see genius. Because the people who are crazy enough to thi",
+          "similarity": 0.7256125
+        },
+        {
+          "text": "Heres to the crazy ones. The misfits. The rebels. The troublemakers. The round pegs in the square ho",
+          "similarity": 0.8977966
+        },
+        {
+          "text": "Maybe they have to be crazy.",
+          "similarity": 1.0279067
+        }
+      ]
+    },
+    {
+      "query": "What do the crazy ones do?",
+      "timestamp": "2025-04-24T13:41:05.497050",
+      "results": [
+        {
+          "text": "While some see them as the crazy ones, we see genius. Because the people who are crazy enough to thi",
+          "similarity": 0.7308817
+        },
+        {
+          "text": "Maybe they have to be crazy.",
+          "similarity": 0.91291475
+        },
+        {
+          "text": "Heres to the crazy ones. The misfits. The rebels. The troublemakers. The round pegs in the square ho",
+          "similarity": 1.0662531
+        }
+      ]
+    },
+    {
+      "query": "How do the crazy ones see things?",
+      "timestamp": "2025-04-24T13:41:05.497050",
+      "results": [
+        {
+          "text": "While some see them as the crazy ones, we see genius. Because the people who are crazy enough to thi",
+          "similarity": 0.7461939
+        },
+        {
+          "text": "Maybe they have to be crazy.",
+          "similarity": 1.0297346
+        },
+        {
+          "text": "How else can you stare at an empty canvas and see a work of art? Or sit in silence and hear a song t",
+          "similarity": 1.2988982
+        }
+      ]
+    },
+    {
+      "query": "What is the main message of the text?",
+      "timestamp": "2025-04-24T13:41:05.497050",
+      "results": [
+        {
+          "text": "us quo. You can quote them, disagree with them, glorify or vilify them.",
+          "similarity": 1.6131392
+        },
+        {
+          "text": "hats never been written? Or gaze at a red planet and see a laboratory on wheels?",
+          "similarity": 1.6357994
+        },
+        {
+          "text": "les.",
+          "similarity": 1.6920986
+        }
+      ]
+    },
+    {
+      "query": "What is the relationship between craziness and genius?",
+      "timestamp": "2025-04-24T13:41:05.497050",
+      "results": [
+        {
+          "text": "While some see them as the crazy ones, we see genius. Because the people who are crazy enough to thi",
+          "similarity": 0.610885
+        },
+        {
+          "text": "Maybe they have to be crazy.",
+          "similarity": 1.2025361
+        },
+        {
+          "text": "Heres to the crazy ones. The misfits. The rebels. The troublemakers. The round pegs in the square ho",
+          "similarity": 1.3747548
+        }
+      ]
+    }
+  ]
+}
