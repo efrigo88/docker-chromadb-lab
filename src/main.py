@@ -8,6 +8,7 @@ from .helpers import (
     get_chunks,
     get_ids,
     get_metadata,
+    get_embeddings,
     prepare_queries,
     prepare_json_data,
     save_json_data,
@@ -26,7 +27,7 @@ def main() -> None:
     print("✅ Chunks, IDs and Metadatas generated.")
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    embeddings = model.encode(chunks).tolist()
+    embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")
 
     data = prepare_json_data(chunks, ids, metadatas, embeddings)

@@ -120,6 +120,14 @@ def get_metadata(
     ]
 
 
+def get_embeddings(
+    chunks: List[str],
+    model: SentenceTransformer,
+) -> List[List[float]]:
+    """Get embeddings for a list of chunks using a specified model."""
+    return model.encode(chunks).tolist()
+
+
 def prepare_queries(
     collection: chromadb.Collection,
     model: SentenceTransformer,
