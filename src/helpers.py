@@ -1,5 +1,7 @@
+import os
+import json
 from typing import List, Dict, Any
-
+from datetime import datetime
 import chromadb
 from chromadb.config import Settings
 from docling.datamodel.document import InputDocument
@@ -7,6 +9,43 @@ from docling.document_converter import DocumentConverter
 from sentence_transformers import SentenceTransformer
 
 from .config import CHUNK_SIZE, SOURCE_PATH, QUERIES
+
+
+def prepare_json_data(
+    chunks: List[str],
+    ids: List[str],
+    metadatas: List[Dict[str, Any]],
+    embeddings: List[List[float]],
+    source_path: str = SOURCE_PATH,
+) -> Dict[str, Any]:
+    """Prepare data in json format."""
+    return {
+        "source": source_path,
+        "timestamp": datetime.now().isoformat(),
+        "chunks": [
+            {
+                "id": ids[i],
+                "text": chunk,
+                "metadata": metadata,
+                "embedding": embedding,
+            }
+            for i, (chunk, metadata, embedding) in enumerate(
+                zip(chunks, metadatas, embeddings)
+            )
+        ],
+    }
+
+
+def save_json_data(
+    data: Dict[str, Any], file_path: str, overwrite: bool = True
+) -> None:
+    """Save data to a JSON file."""
+    if not overwrite and os.path.exists(file_path):
+        raise FileExistsError(
+            f"File {file_path} already exists and overwrite=False"
+        )
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 def get_client() -> chromadb.HttpClient:
@@ -53,7 +92,7 @@ def get_chunks(
     chunks = []
     for text in text_content:
         for i in range(0, len(text), chunk_size):
-            chunk = text[i:i + chunk_size].strip()
+            chunk = text[i : i + chunk_size].strip()
             if chunk:
                 chunks.append(chunk)
     if not chunks:

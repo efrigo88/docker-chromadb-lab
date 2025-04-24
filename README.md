@@ -6,17 +6,53 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 
 ```
 .
-├── docker-compose.yml    # Docker Compose configuration
-├── Dockerfile           # Docker configuration
-├── Makefile             # Helper commands
-├── pyproject.toml       # Python project configuration
-├── src/                 # Source code directory
-│   ├── __init__.py     # Package initialization
-│   ├── config.py       # Configuration constants
-│   ├── helpers.py      # Helper functions
-│   └── main.py         # Main application code
-└── sample.pdf          # Sample PDF for testing
+├── data/                     # Directory for data files
+│   └── data.json             # Sample json ouptut file
+├── src/                      # Source code
+│   ├── __init__.py
+│   ├── config.py             # Configuration settings
+│   ├── helpers.py            # Utility functions
+│   └── main.py               # Main script
+├── docker-compose.yml        # Docker Compose configuration
+├── Dockerfile                # Docker configuration
+├── requirements.txt          # Python dependencies
+└── README.md                 # This file
 ```
+
+## Data Output Format
+
+The project generates a JSON file containing document chunks and their embeddings. The output format is as follows:
+
+```json
+{
+    "source": "path/to/source/file.pdf",
+    "timestamp": "2024-03-21T12:34:56.789012",
+    "chunks": [
+        {
+            "id": "file.pdf_chunk_0",
+            "text": "First chunk of text...",
+            "metadata": {
+                "source": "path/to/source/file.pdf",
+                "chunk_index": 0,
+                "title": "Document Title",
+                "chunk_size": 123
+            },
+            "embedding": [0.1, 0.2, 0.3, ...]  // Vector embedding of the chunk
+        },
+        // ... more chunks
+    ]
+}
+```
+
+### Key Features of the Output
+
+- **Source**: Original document path
+- **Timestamp**: When the file was generated
+- **Chunks**: Array of document segments containing:
+  - **id**: Unique identifier for the chunk
+  - **text**: The actual text content
+  - **metadata**: Additional information about the chunk
+  - **embedding**: Vector representation of the text
 
 ## Features
 
@@ -29,16 +65,19 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## Recent Changes
 
 1. **Improved Project Structure**
+
    - Organized code into `src` package
    - Separated configuration into `config.py`
    - Better code organization and maintainability
 
 2. **Improved Text Chunking**
+
    - Implemented fixed-size chunking (500 characters)
    - Added chunk size metadata
    - Better text boundary handling
 
 3. **Enhanced Query System**
+
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
@@ -51,11 +90,13 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## How It Works
 
 1. **Document Processing**
+
    - PDF is loaded and converted using Docling
    - Text is extracted and split into manageable chunks
    - Each chunk is embedded using Sentence Transformers
 
 2. **Storage**
+
    - Chunks are stored in ChromaDB with:
      - Unique IDs
      - Text content
@@ -76,12 +117,14 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ## Getting Started
 
 1. Clone the repository:
+
    ```bash
    git clone git@github.com:efrigo88/docker-chromadb-lab.git
    cd docker-chromadb-lab
    ```
 
 2. Build and start the containers:
+
    ```bash
    docker compose up -d --build
    ```
