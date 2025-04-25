@@ -112,11 +112,11 @@ def prepare_json_data(
     """Prepare data in json format."""
     return [
         {
+            "processed_at": datetime.now().isoformat(),
             "id": id_,
             "text": chunk,
             "metadata": metadata,
             "embedding": embedding,
-            "processed_at": datetime.now().isoformat(),
         }
         for id_, chunk, metadata, embedding in zip(
             ids, chunks, metadatas, embeddings
@@ -128,9 +128,8 @@ def prepare_queries(
     collection: chromadb.Collection,
     model: SentenceTransformer,
     queries: List[str],
-) -> Dict[str, Any]:
+) -> List[Dict[str, Any]]:
     """Run queries and prepare results in json format."""
-    timestamp = datetime.now().isoformat()
     all_results = []
 
     for query in queries:
@@ -139,8 +138,8 @@ def prepare_queries(
             query_embeddings=[query_embedding], n_results=3
         )
         query_result = {
+            "processed_at": datetime.now().isoformat(),
             "query": query,
-            "timestamp": timestamp,
             "results": [
                 {
                     "text": doc,
