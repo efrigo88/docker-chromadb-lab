@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Dict, Any, Tuple
-
+from chromadb import Collection
 from sentence_transformers import SentenceTransformer
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame
@@ -49,7 +49,6 @@ def process_document() -> Tuple[
     model = SentenceTransformer("all-MiniLM-L6-v2")
     embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")
-
     return ids, chunks, metadatas, embeddings, model
 
 
@@ -75,7 +74,6 @@ def create_dataframe(
         ],
         schema=schema,
     )
-
     return df
 
 
@@ -95,10 +93,8 @@ def deduplicate_data(df: DataFrame) -> DataFrame:
     return df
 
 
-def store_in_chromadb_and_run_queries(
-    df_loaded: DataFrame, model: SentenceTransformer
-) -> None:
-    """Store data in ChromaDB and run queries."""
+def store_in_chromadb(df_loaded: DataFrame) -> Collection:
+    """Store data in ChromaDB"""
     client = get_client()
     collection = get_collection(client)
 
@@ -119,10 +115,7 @@ def store_in_chromadb_and_run_queries(
     all_data = collection.get()
     total_docs = len(all_data["ids"])
     print(f"📊 Total documents in ChromaDB: {total_docs}")
-
-    answers = prepare_queries(collection, model, QUERIES)
-    save_json_data(answers, ANSWERS_PATH)
-    print(f"✅ Saved answers in {ANSWERS_PATH}")
+    return collection
 
 
 def main() -> None:
@@ -136,17 +129,18 @@ def main() -> None:
     df.write.format("delta").mode("append").save(OUTPUT_PATH)
     print(f"✅ Saved Delta table in {OUTPUT_PATH}")
 
-    # Load Delta table
     df_loaded = spark.read.format("delta").load(OUTPUT_PATH)
 
-    # Deduplicate data
     df_deduplicated = deduplicate_data(df_loaded)
-
+    print(f"✅ Deduplicated DataFrame in {OUTPUT_PATH}")
     print(df_deduplicated.show(5))
 
-    # Store in ChromaDB and run queries
-    store_in_chromadb_and_run_queries(df_deduplicated, model)
+    collection = store_in_chromadb(df_deduplicated)
 
+    # Run queries and save answers
+    answers = prepare_queries(collection, model, QUERIES)
+    save_json_data(answers, ANSWERS_PATH)
+    print(f"✅ Saved answers in {ANSWERS_PATH}")
     print("✅ Process completed!")
 
     spark.stop()
