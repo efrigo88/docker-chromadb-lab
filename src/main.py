@@ -35,9 +35,9 @@ def main() -> None:
     embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")
 
-    data = prepare_json_data(chunks, ids, metadatas, embeddings, FILE_PATH)
-    save_json_data(data, "./data/data.json")
-    print("✅ Saved data to ./data/data.json")
+    data = prepare_json_data(chunks, ids, metadatas, embeddings)
+    save_json_data(data, "./data/data.jsonl")
+    print("✅ Saved data to ./data/data.jsonl")
 
     client = get_client()
     collection = get_collection(client)
@@ -47,8 +47,8 @@ def main() -> None:
     print(f"✅ Stored {len(chunks)} chunks in ChromaDB.")
 
     questions_answers = prepare_queries(collection, model, QUERIES)
-    save_json_data(questions_answers, "./data/questions_answers.json")
-    print("✅ Saved questions and answers to ./data/questions_answers.json")
+    save_json_data(questions_answers, "./data/questions_answers.jsonl")
+    print("✅ Saved questions and answers to ./data/questions_answers.jsonl")
     print("✅ Process completed!")
 
 

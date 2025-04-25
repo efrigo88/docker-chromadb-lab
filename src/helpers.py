@@ -9,41 +9,18 @@ from docling.document_converter import DocumentConverter
 from sentence_transformers import SentenceTransformer
 
 
-def prepare_json_data(
-    chunks: List[str],
-    ids: List[str],
-    metadatas: List[Dict[str, Any]],
-    embeddings: List[List[float]],
-    source_path: str,
-) -> Dict[str, Any]:
-    """Prepare data in json format."""
-    return {
-        "source": source_path,
-        "timestamp": datetime.now().isoformat(),
-        "chunks": [
-            {
-                "id": ids[i],
-                "text": chunk,
-                "metadata": metadata,
-                "embedding": embedding,
-            }
-            for i, (chunk, metadata, embedding) in enumerate(
-                zip(chunks, metadatas, embeddings)
-            )
-        ],
-    }
-
-
 def save_json_data(
-    data: Dict[str, Any], file_path: str, overwrite: bool = True
+    data: List[Dict[str, Any]], file_path: str, overwrite: bool = True
 ) -> None:
-    """Save data to a JSON file."""
+    """Save data to a JSONL file (one JSON object per line)."""
     if not overwrite and os.path.exists(file_path):
         raise FileExistsError(
             f"File {file_path} already exists and overwrite=False"
         )
     with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=4, ensure_ascii=False)
+        for item in data:
+            json.dump(item, f, ensure_ascii=False)
+            f.write("\n")
 
 
 def get_client() -> chromadb.HttpClient:
@@ -126,6 +103,27 @@ def get_embeddings(
     return model.encode(chunks).tolist()
 
 
+def prepare_json_data(
+    chunks: List[str],
+    ids: List[str],
+    metadatas: List[Dict[str, Any]],
+    embeddings: List[List[float]],
+) -> List[Dict[str, Any]]:
+    """Prepare data in json format."""
+    return [
+        {
+            "id": id_,
+            "text": chunk,
+            "metadata": metadata,
+            "embedding": embedding,
+            "processed_at": datetime.now().isoformat(),
+        }
+        for id_, chunk, metadata, embedding in zip(
+            ids, chunks, metadatas, embeddings
+        )
+    ]
+
+
 def prepare_queries(
     collection: chromadb.Collection,
     model: SentenceTransformer,
@@ -155,4 +153,4 @@ def prepare_queries(
         }
         all_results.append(query_result)
 
-    return {"queries": all_results}
+    return all_results

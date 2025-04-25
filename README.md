@@ -22,50 +22,22 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 
 ## Data Output Format
 
-### Document Chunks
+### Document Chunks (data.json)
 
-The project generates a JSON file containing document chunks and their embeddings. The output format is as follows:
+The project generates a JSONL file containing document chunks and their embeddings. Each line is a complete JSON object:
 
-```json
-{
-    "source": "path/to/source/file.pdf",
-    "timestamp": "2024-03-21T12:34:56.789012",
-    "chunks": [
-        {
-            "id": "file.pdf_chunk_0",
-            "text": "First chunk of text...",
-            "metadata": {
-                "source": "path/to/source/file.pdf",
-                "chunk_index": 0,
-                "title": "Document Title",
-                "chunk_size": 123
-            },
-            "embedding": [0.1, 0.2, 0.3, ...]  // Vector embedding of the chunk
-        },
-        // ... more chunks
-    ]
-}
+```jsonl
+{"id": "document_chunk_0", "text": "First chunk of text...", "metadata": {"source": "path/to/source/file.pdf", "chunk_index": 0, "title": "Document Title", "chunk_size": 123}, "embedding": [0.1, 0.2, 0.3, ...], "processed_at": "2024-03-21T12:34:56.789012"}
+{"id": "document_chunk_1", "text": "Second chunk of text...", "metadata": {"source": "path/to/source/file.pdf", "chunk_index": 1, "title": "Document Title", "chunk_size": 123}, "embedding": [0.4, 0.5, 0.6, ...], "processed_at": "2024-03-21T12:34:56.789012"}
 ```
 
-### Query Results
+### Query Results (questions_answers.json)
 
-Query results are saved in a separate JSON file with similarity scores:
+Query results are saved in a JSONL file with similarity scores. Each line is a complete JSON object:
 
-```json
-{
-  "queries": [
-    {
-      "query": "your question here",
-      "timestamp": "2024-03-21T12:34:56.789012",
-      "results": [
-        {
-          "text": "Retrieved text chunk",
-          "similarity": 0.95 // Cosine similarity score
-        }
-      ]
-    }
-  ]
-}
+```jsonl
+{"query": "Who are the crazy ones?", "timestamp": "2024-03-21T12:34:56.789012", "results": [{"text": "Retrieved text chunk", "similarity": 0.95}]}
+{"query": "What do the crazy ones do?", "timestamp": "2024-03-21T12:34:56.789012", "results": [{"text": "Another text chunk", "similarity": 0.89}]}
 ```
 
 ### Understanding Similarity Scores
