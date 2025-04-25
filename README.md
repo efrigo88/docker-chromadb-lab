@@ -149,21 +149,38 @@ The similarity scores represent how closely the retrieved text matches the seman
 - `make ps` - Check container status
 - `make clean` - Remove containers and volumes
 
-## Requirements
+## Container Setup and Usage
 
-- Python 3.9+
-- chromadb
-- docling
-- sentence-transformers
+1. Start the containers:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+   This will build and start both the app and chroma containers in the background.
+
+2. Run your script in the app container:
+
+   ```bash
+   docker exec -it app python -m src.main
+   ```
+
+   The container will stay running, allowing you to:
+
+   - Modify code in the `src` directory
+   - Run the script multiple times
+   - See the output in your terminal
+
+3. To stop the containers when done (will delete the volume as well):
+   ```bash
+   docker compose down -v
+   ```
 
 ## Usage
 
 1. Place your PDF in the project directory
 2. Update `FILE_PATH` in `src/main.py` if needed
-3. Run the script:
-   ```bash
-   python -m src.main
-   ```
+3. Run the script as shown in the Container Setup section above
 
 ## Example Queries
 
