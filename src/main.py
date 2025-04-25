@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from sentence_transformers import SentenceTransformer
+import pandas as pd
 
 from .helpers import (
     get_client,
@@ -10,46 +13,65 @@ from .helpers import (
     get_metadata,
     get_embeddings,
     prepare_queries,
-    prepare_json_data,
     save_json_data,
 )
 
 from .queries import QUERIES
 
-FILE_PATH = "./data/input/sample2.pdf"
+INPUT_PATH = "./data/input/sample2.pdf"
+OUTPUT_PATH = "./data/output/data.jsonl"
+ANSWERS_PATH = "./data/answers/answers.jsonl"
 CHUNK_SIZE = 100
 
 
 def main() -> None:
     """Main function to process PDF, store in ChromaDB, and run queries."""
-    doc = parse_pdf(FILE_PATH)
+    doc = parse_pdf(INPUT_PATH)
     text_content = get_text_content(doc)
     print("✅ Text content generated.")
 
     chunks = get_chunks(text_content, CHUNK_SIZE)
-    ids = get_ids(chunks, FILE_PATH)
-    metadatas = get_metadata(chunks, doc, FILE_PATH)
+    ids = get_ids(chunks, INPUT_PATH)
+    metadatas = get_metadata(chunks, doc, INPUT_PATH)
     print("✅ Chunks, IDs and Metadatas generated.")
 
+    # Create DataFrame for data manipulation
+    df = pd.DataFrame({"id": ids, "chunk": chunks, "metadata": metadatas})
+
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    embeddings = get_embeddings(chunks, model)
+    embeddings = get_embeddings(df["chunk"].tolist(), model)
     print("✅ Embeddings generated.")
 
-    data = prepare_json_data(chunks, ids, metadatas, embeddings)
-    save_json_data(data, "./data/output/data.jsonl")
-    print("✅ Saved data to ./data/output/data.jsonl")
+    # Enrich DataFrame with embeddings and processed_at
+    df["embeddings"] = embeddings
+    df["processed_at"] = datetime.now().isoformat()
 
+    # Save DataFrame to JSON
+    # Reorder columns before saving
+    df = df[["processed_at", "id", "chunk", "metadata", "embeddings"]]
+    df.to_json(OUTPUT_PATH, orient="records", lines=True, mode="w")
+    print("✅ Saved DataFrame to")
+    print(OUTPUT_PATH)
+
+    # Read data back from JSON
+    df_loaded = pd.read_json(OUTPUT_PATH, lines=True)
+
+    # Store data in ChromaDB
     client = get_client()
     collection = get_collection(client)
     collection.add(
-        ids=ids, documents=chunks, metadatas=metadatas, embeddings=embeddings
+        ids=df_loaded["id"].tolist(),
+        documents=df_loaded["chunk"].tolist(),
+        metadatas=df_loaded["metadata"].tolist(),
+        embeddings=df_loaded["embeddings"].tolist(),
     )
-    print(f"✅ Stored {len(chunks)} chunks in ChromaDB.")
+    print(f"✅ Stored {len(df_loaded)} chunks in ChromaDB.")
 
-    questions_answers = prepare_queries(collection, model, QUERIES)
-    save_json_data(questions_answers, "./data/answers/answers.jsonl")
-    print("✅ Saved questions and answers to")
-    print("./data/answers/answers.jsonl")
+    # Run queries and save results
+    answers = prepare_queries(collection, model, QUERIES)
+    save_json_data(answers, ANSWERS_PATH)
+    print("✅ Saved answers to")
+    print(ANSWERS_PATH)
     print("✅ Process completed!")
 
 
