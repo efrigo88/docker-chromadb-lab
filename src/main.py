@@ -25,7 +25,7 @@ CHUNK_SIZE = 100
 
 
 def main() -> None:
-    """Main function to process PDF, store in ChromaDB, and run queries."""
+    """Process PDF, transform data, store in ChromaDB, and run queries."""
     doc = parse_pdf(INPUT_PATH)
     text_content = get_text_content(doc)
     print("✅ Text content generated.")
@@ -59,13 +59,18 @@ def main() -> None:
     # Store data in ChromaDB
     client = get_client()
     collection = get_collection(client)
-    collection.add(
+    collection.upsert(
         ids=df_loaded["id"].tolist(),
         documents=df_loaded["chunk"].tolist(),
         metadatas=df_loaded["metadata"].tolist(),
         embeddings=df_loaded["embeddings"].tolist(),
     )
-    print(f"✅ Stored {len(df_loaded)} chunks in ChromaDB.")
+    print(f"✅ Upserted {len(df_loaded)} chunks in ChromaDB.")
+
+    # Fetch and count all data in ChromaDB
+    all_data = collection.get()
+    total_docs = len(all_data["ids"])
+    print(f"📊 Total documents in ChromaDB: {total_docs}")
 
     # Run queries and save results
     answers = prepare_queries(collection, model, QUERIES)
