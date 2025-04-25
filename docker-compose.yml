@@ -10,15 +10,19 @@ services:
       - chroma
     networks:
       - net
+    # keep container running, only for development
+    command: tail -f /dev/null
 
   chroma:
-    image: ghcr.io/chroma-core/chroma:latest
+    # https://github.com/chroma-core/chroma/pkgs/container/chroma
+    image: ghcr.io/chroma-core/chroma:1.0.8.dev9
     volumes:
       - index_data:/chroma/.chroma/index
     ports:
       - 8000:8000
     networks:
       - net
+    restart: unless-stopped
 
 volumes:
   index_data:

@@ -9,18 +9,13 @@ from docling.document_converter import DocumentConverter
 from sentence_transformers import SentenceTransformer
 
 
-def save_json_data(
-    data: List[Dict[str, Any]], file_path: str, overwrite: bool = True
-) -> None:
-    """Save data to a JSONL file (one JSON object per line)."""
-    if not overwrite and os.path.exists(file_path):
-        raise FileExistsError(
-            f"File {file_path} already exists and overwrite=False"
-        )
-    with open(file_path, "w", encoding="utf-8") as f:
-        for item in data:
-            json.dump(item, f, ensure_ascii=False)
-            f.write("\n")
+def get_base_output_path() -> str:
+    """Get the output path to save the JSONL file."""
+    base_output_path = "./data/output"
+    dt = datetime.now().strftime("%Y-%m-%d")
+    output_dir = f"{base_output_path}/{dt}"
+    os.makedirs(output_dir, exist_ok=True)
+    return output_dir
 
 
 def get_client() -> chromadb.HttpClient:
@@ -75,7 +70,8 @@ def get_chunks(text_content: List[str], chunk_size: int) -> List[str]:
 
 def get_ids(chunks: List[str], source_path: str) -> List[str]:
     """Generate unique IDs for each chunk."""
-    return [f"{source_path}_chunk_{i}" for i in range(len(chunks))]
+    filename = source_path.split("/")[-1]
+    return [f"{filename}_chunk_{i}" for i in range(len(chunks))]
 
 
 def get_metadata(
@@ -84,9 +80,10 @@ def get_metadata(
     source_path: str,
 ) -> List[Dict[str, Any]]:
     """Generate metadata for each chunk."""
+    filename = source_path.split("/")[-1]
     return [
         {
-            "source": source_path,
+            "source": filename,
             "chunk_index": i,
             "title": doc.name,
             "chunk_size": len(chunk),
@@ -101,27 +98,6 @@ def get_embeddings(
 ) -> List[List[float]]:
     """Get embeddings for a list of chunks using a specified model."""
     return model.encode(chunks).tolist()
-
-
-def prepare_json_data(
-    chunks: List[str],
-    ids: List[str],
-    metadatas: List[Dict[str, Any]],
-    embeddings: List[List[float]],
-) -> List[Dict[str, Any]]:
-    """Prepare data in json format."""
-    return [
-        {
-            "processed_at": datetime.now().isoformat(),
-            "id": id_,
-            "text": chunk,
-            "metadata": metadata,
-            "embedding": embedding,
-        }
-        for id_, chunk, metadata, embedding in zip(
-            ids, chunks, metadatas, embeddings
-        )
-    ]
 
 
 def prepare_queries(
@@ -153,3 +129,17 @@ def prepare_queries(
         all_results.append(query_result)
 
     return all_results
+
+
+def save_json_data(
+    data: List[Dict[str, Any]], file_path: str, overwrite: bool = True
+) -> None:
+    """Save data to a JSONL file (one JSON object per line)."""
+    if not overwrite and os.path.exists(file_path):
+        raise FileExistsError(
+            f"File {file_path} already exists and overwrite=False"
+        )
+    with open(file_path, "w", encoding="utf-8") as f:
+        for item in data:
+            json.dump(item, f, ensure_ascii=False)
+            f.write("\n")

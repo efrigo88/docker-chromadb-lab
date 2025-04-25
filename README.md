@@ -7,17 +7,19 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ```
 .
 ├── data/                      # Directory for data files
-│   ├── data.json              # Sample json data output
-│   └── questions_answers.json # Query results with similarity scores
-├── src/                       # Source code
+│   ├── input/                # Input PDF files
+│   ├── output/               # Processed data (JSONL files)
+│   │   └── YYYY-MM-DD/      # Date-based subdirectories
+│   └── answers/              # Query results
+├── src/                      # Source code
 │   ├── __init__.py
-│   ├── queries.py            # Predefined queries for testing
-│   ├── helpers.py            # Utility functions
-│   └── main.py               # Main script
-├── docker-compose.yml        # Docker Compose configuration
-├── Dockerfile                # Docker configuration
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file
+│   ├── queries.py           # Predefined queries for testing
+│   ├── helpers.py           # Utility functions
+│   └── main.py              # Main script
+├── docker-compose.yml       # Docker Compose configuration
+├── Dockerfile               # Docker configuration
+├── requirements.txt         # Python dependencies
+└── README.md                # This file
 ```
 
 ## Data Output Format
@@ -88,9 +90,16 @@ The similarity scores represent how closely the retrieved text matches the seman
    - Better text boundary handling
 
 5. **Enhanced Query System**
+
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
+
+6. **Pandas Integration**
+   - Added DataFrame operations for data processing
+   - Implemented data deduplication using pandas
+   - Added date-based file organization
+   - Improved data storage and retrieval workflow
 
 ## How It Works
 
@@ -149,21 +158,38 @@ The similarity scores represent how closely the retrieved text matches the seman
 - `make ps` - Check container status
 - `make clean` - Remove containers and volumes
 
-## Requirements
+## Container Setup and Usage
 
-- Python 3.9+
-- chromadb
-- docling
-- sentence-transformers
+1. Start the containers:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+   This will build and start both the app and chroma containers in the background.
+
+2. Run your script in the app container:
+
+   ```bash
+   docker exec -it app python -m src.main
+   ```
+
+   The container will stay running, allowing you to:
+
+   - Modify code in the `src` directory
+   - Run the script multiple times
+   - See the output in your terminal
+
+3. To stop the containers when done (will delete the volume as well):
+   ```bash
+   docker compose down -v
+   ```
 
 ## Usage
 
 1. Place your PDF in the project directory
 2. Update `FILE_PATH` in `src/main.py` if needed
-3. Run the script:
-   ```bash
-   python -m src.main
-   ```
+3. Run the script as shown in the Container Setup section above
 
 ## Example Queries
 
