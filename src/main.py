@@ -16,7 +16,7 @@ from .helpers import (
 
 from .queries import QUERIES
 
-FILE_PATH = "./sample2.pdf"
+FILE_PATH = "./data/input/sample2.pdf"
 CHUNK_SIZE = 100
 
 
@@ -36,8 +36,8 @@ def main() -> None:
     print("✅ Embeddings generated.")
 
     data = prepare_json_data(chunks, ids, metadatas, embeddings)
-    save_json_data(data, "./data/data.jsonl")
-    print("✅ Saved data to ./data/data.jsonl")
+    save_json_data(data, "./data/output/data.jsonl")
+    print("✅ Saved data to ./data/output/data.jsonl")
 
     client = get_client()
     collection = get_collection(client)
@@ -47,8 +47,9 @@ def main() -> None:
     print(f"✅ Stored {len(chunks)} chunks in ChromaDB.")
 
     questions_answers = prepare_queries(collection, model, QUERIES)
-    save_json_data(questions_answers, "./data/questions_answers.jsonl")
-    print("✅ Saved questions and answers to ./data/questions_answers.jsonl")
+    save_json_data(questions_answers, "./data/answers/answers.jsonl")
+    print("✅ Saved questions and answers to")
+    print("./data/answers/answers.jsonl")
     print("✅ Process completed!")
 
 
