@@ -49,3 +49,7 @@ logs/
 Thumbs.db
 
 .cursor/
+
+# Delta table
+# Delta table output
+/data/output/

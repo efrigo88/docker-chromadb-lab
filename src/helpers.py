@@ -3,10 +3,49 @@ import json
 from typing import List, Dict, Any
 from datetime import datetime
 import chromadb
+from pyspark.sql import SparkSession
+import pyspark.sql.types as T
 from chromadb.config import Settings
 from docling.datamodel.document import InputDocument
 from docling.document_converter import DocumentConverter
 from sentence_transformers import SentenceTransformer
+
+# Define schema
+schema = T.StructType(
+    [
+        T.StructField("processed_at", T.TimestampType(), True),
+        T.StructField("id", T.StringType(), True),
+        T.StructField("chunk", T.StringType(), True),
+        T.StructField(
+            "metadata",
+            T.StructType(
+                [
+                    T.StructField("source", T.StringType(), True),
+                    T.StructField("chunk_index", T.IntegerType(), True),
+                    T.StructField("title", T.StringType(), True),
+                    T.StructField("chunk_size", T.IntegerType(), True),
+                ]
+            ),
+            True,
+        ),
+        T.StructField("embeddings", T.ArrayType(T.FloatType()), True),
+    ]
+)
+
+# Create Spark session
+spark = (
+    SparkSession.builder.appName("TestSpark")
+    .master("local[4]")
+    .config("spark.driver.memory", "8g")
+    .config("spark.sql.shuffle.partitions", "4")
+    .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+    .config(
+        "spark.sql.catalog.spark_catalog",
+        "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+    )
+    .config("spark.jars.packages", "io.delta:delta-spark_2.12:3.2.0")
+    .getOrCreate()
+)
 
 
 def get_base_output_path() -> str:

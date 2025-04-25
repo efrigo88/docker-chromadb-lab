@@ -8,9 +8,9 @@ dependencies = [
     "numpy==2.0.2",
     "sentence-transformers==4.1.0",
     "docling==2.30.0",
-    "pandas==2.2.3",
+    "pyspark==3.5.1",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [project.optional-dependencies]
 dev = ["black==24.3.0", "isort==5.10.1", "pylint==3.0.3", "pre-commit==3.6.0"]
@@ -24,7 +24,7 @@ packages = ["src"]
 
 [tool.black]
 line-length = 79
-target-version = ['py39']
+target-version = ['py310']
 include = '\.pyi?$'
 
 [tool.isort]
