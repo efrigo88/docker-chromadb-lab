@@ -92,7 +92,6 @@ def deduplicate_data(df: DataFrame) -> DataFrame:
         )
     )
     print(f"✅ Deduplicated DataFrame in {OUTPUT_PATH}")
-    df.show(5)
     return df
 
 
@@ -128,32 +127,30 @@ def store_in_chromadb_and_run_queries(
 
 def main() -> None:
     """Process PDF, transform data, store in ChromaDB, and run queries."""
-    try:
-        # Process document and generate embeddings
-        ids, chunks, metadatas, embeddings, model = process_document()
+    # Process document and generate embeddings
+    ids, chunks, metadatas, embeddings, model = process_document()
 
-        df = create_dataframe(ids, chunks, metadatas, embeddings)
+    df = create_dataframe(ids, chunks, metadatas, embeddings)
 
-        # Save DataFrame to Delta table
-        df.write.format("delta").mode("append").save(OUTPUT_PATH)
-        print(f"✅ Saved Delta table in {OUTPUT_PATH}")
+    # Save DataFrame to Delta table
+    df.write.format("delta").mode("append").save(OUTPUT_PATH)
+    print(f"✅ Saved Delta table in {OUTPUT_PATH}")
 
-        # Load Delta table
-        df_loaded = spark.read.format("delta").load(OUTPUT_PATH)
+    # Load Delta table
+    df_loaded = spark.read.format("delta").load(OUTPUT_PATH)
 
-        # Deduplicate data
-        df_deduplicated = deduplicate_data(df_loaded)
+    # Deduplicate data
+    df_deduplicated = deduplicate_data(df_loaded)
 
-        print(df_deduplicated.show(5))
+    print(df_deduplicated.show(5))
 
-        # Store in ChromaDB and run queries
-        store_in_chromadb_and_run_queries(df_deduplicated, model)
+    # Store in ChromaDB and run queries
+    store_in_chromadb_and_run_queries(df_deduplicated, model)
 
-        print("✅ Process completed!")
-    finally:
-        # Stop Spark session
-        spark.stop()
-        print("✅ Spark session stopped.")
+    print("✅ Process completed!")
+
+    spark.stop()
+    print("✅ Spark session stopped.")
 
 
 if __name__ == "__main__":
