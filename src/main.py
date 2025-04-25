@@ -4,6 +4,7 @@ from sentence_transformers import SentenceTransformer
 import pandas as pd
 
 from .helpers import (
+    get_base_output_path,
     get_client,
     get_collection,
     parse_pdf,
@@ -19,7 +20,7 @@ from .helpers import (
 from .queries import QUERIES
 
 INPUT_PATH = "./data/input/sample2.pdf"
-OUTPUT_PATH = "./data/output/data.jsonl"
+OUTPUT_PATH = f"{get_base_output_path()}/data.jsonl"
 ANSWERS_PATH = "./data/answers/answers.jsonl"
 CHUNK_SIZE = 100
 
@@ -49,12 +50,20 @@ def main() -> None:
     # Save DataFrame to JSON
     # Reorder columns before saving
     df = df[["processed_at", "id", "chunk", "metadata", "embeddings"]]
-    df.to_json(OUTPUT_PATH, orient="records", lines=True, mode="w")
-    print("✅ Saved DataFrame to")
-    print(OUTPUT_PATH)
+    df.to_json(OUTPUT_PATH, orient="records", lines=True, mode="a")
+    print(f"✅ Saved json file in {OUTPUT_PATH}")
 
     # Read data back from JSON
     df_loaded = pd.read_json(OUTPUT_PATH, lines=True)
+
+    # Deduplicate data - keep most recent record per id
+    df_loaded = (
+        df_loaded
+        .sort_values("processed_at", ascending=False)
+        .groupby("id")
+        .first()
+        .reset_index()
+    )
 
     # Store data in ChromaDB
     client = get_client()
@@ -75,8 +84,7 @@ def main() -> None:
     # Run queries and save results
     answers = prepare_queries(collection, model, QUERIES)
     save_json_data(answers, ANSWERS_PATH)
-    print("✅ Saved answers to")
-    print(ANSWERS_PATH)
+    print(f"✅ Saved answers in {ANSWERS_PATH}")
     print("✅ Process completed!")
 
 

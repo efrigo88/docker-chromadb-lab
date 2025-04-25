@@ -7,17 +7,19 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ```
 .
 ├── data/                      # Directory for data files
-│   ├── data.json              # Sample json data output
-│   └── questions_answers.json # Query results with similarity scores
-├── src/                       # Source code
+│   ├── input/                # Input PDF files
+│   ├── output/               # Processed data (JSONL files)
+│   │   └── YYYY-MM-DD/      # Date-based subdirectories
+│   └── answers/              # Query results
+├── src/                      # Source code
 │   ├── __init__.py
-│   ├── queries.py            # Predefined queries for testing
-│   ├── helpers.py            # Utility functions
-│   └── main.py               # Main script
-├── docker-compose.yml        # Docker Compose configuration
-├── Dockerfile                # Docker configuration
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file
+│   ├── queries.py           # Predefined queries for testing
+│   ├── helpers.py           # Utility functions
+│   └── main.py              # Main script
+├── docker-compose.yml       # Docker Compose configuration
+├── Dockerfile               # Docker configuration
+├── requirements.txt         # Python dependencies
+└── README.md                # This file
 ```
 
 ## Data Output Format
@@ -88,9 +90,16 @@ The similarity scores represent how closely the retrieved text matches the seman
    - Better text boundary handling
 
 5. **Enhanced Query System**
+
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
+
+6. **Pandas Integration**
+   - Added DataFrame operations for data processing
+   - Implemented data deduplication using pandas
+   - Added date-based file organization
+   - Improved data storage and retrieval workflow
 
 ## How It Works
 
