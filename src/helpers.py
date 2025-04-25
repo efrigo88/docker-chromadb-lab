@@ -13,7 +13,6 @@ from sentence_transformers import SentenceTransformer
 # Define schema
 schema = T.StructType(
     [
-        T.StructField("processed_at", T.TimestampType(), True),
         T.StructField("id", T.StringType(), True),
         T.StructField("chunk", T.StringType(), True),
         T.StructField(
@@ -28,6 +27,8 @@ schema = T.StructType(
             ),
             True,
         ),
+        T.StructField("processed_at", T.TimestampType(), True),
+        T.StructField("processed_dt", T.StringType(), True),
         T.StructField("embeddings", T.ArrayType(T.FloatType()), True),
     ]
 )
@@ -46,15 +47,6 @@ spark = (
     .config("spark.jars.packages", "io.delta:delta-spark_2.12:3.2.0")
     .getOrCreate()
 )
-
-
-def get_base_output_path() -> str:
-    """Get the output path to save the JSONL file."""
-    base_output_path = "./data/output"
-    dt = datetime.now().strftime("%Y-%m-%d")
-    output_dir = f"{base_output_path}/{dt}"
-    os.makedirs(output_dir, exist_ok=True)
-    return output_dir
 
 
 def get_client() -> chromadb.HttpClient:

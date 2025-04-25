@@ -9,7 +9,7 @@ This project demonstrates how to process PDF documents, extract text, and perfor
 ├── data/                      # Directory for data files
 │   ├── input/                # Input PDF files
 │   ├── output/               # Processed data (JSONL files)
-│   │   └── YYYY-MM-DD/      # Date-based subdirectories
+│   │   └── delta_table/      # Date-based delta table
 │   └── answers/              # Query results
 ├── src/                      # Source code
 │   ├── __init__.py
@@ -61,41 +61,50 @@ The similarity scores represent how closely the retrieved text matches the seman
 - Multiple query testing capabilities
 - Metadata tracking for each text chunk
 - Query results with similarity scores
+- Delta Lake storage with date partitioning for efficient data management
+- Data versioning and time-travel capabilities through Delta Lake
 
 ## Recent Changes
 
-1. **Code Simplification**
+1. **Delta Lake Integration**
+
+   - Added Delta Lake for efficient data storage
+   - Implemented date-based partitioning (processed_dt)
+   - Added data versioning capabilities
+   - Improved query performance through partitioning
+
+2. **Code Simplification**
 
    - Removed default parameters for better clarity
    - Simplified function signatures
    - Improved type annotations
    - Better code organization
 
-2. **Query Results Enhancement**
+3. **Query Results Enhancement**
 
    - Added similarity scores to query results
    - Improved result ranking based on semantic similarity
    - Structured JSON output for better analysis
 
-3. **Improved Project Structure**
+4. **Improved Project Structure**
 
    - Organized code into `src` package
    - Separated queries file into `queries.py`
    - Better code organization and maintainability
 
-4. **Improved Text Chunking**
+5. **Improved Text Chunking**
 
    - Implemented fixed-size chunking
    - Added chunk size metadata
    - Better text boundary handling
 
-5. **Enhanced Query System**
+6. **Enhanced Query System**
 
    - Added multiple query testing
    - Improved query formatting
    - Better result presentation
 
-6. **Pandas Integration**
+7. **Pandas Integration**
    - Added DataFrame operations for data processing
    - Implemented data deduplication using pandas
    - Added date-based file organization
@@ -111,7 +120,11 @@ The similarity scores represent how closely the retrieved text matches the seman
 
 2. **Storage**
 
-   - Chunks are stored in ChromaDB with:
+   - Chunks are stored in Delta Lake with:
+     - Date-based partitioning (processed_dt)
+     - Data versioning capabilities
+     - Efficient query performance
+   - Embeddings are stored in ChromaDB with:
      - Unique IDs
      - Text content
      - Pre-computed embeddings

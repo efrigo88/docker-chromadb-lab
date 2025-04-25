@@ -6,7 +6,6 @@ import pyspark.sql.functions as F
 from pyspark.sql import DataFrame
 
 from .helpers import (
-    get_base_output_path,
     get_client,
     get_collection,
     parse_pdf,
@@ -24,7 +23,7 @@ from .helpers import (
 from .queries import QUERIES
 
 INPUT_PATH = "./data/input/sample2.pdf"
-OUTPUT_PATH = f"{get_base_output_path()}/delta_table"
+OUTPUT_PATH = "./data/output/delta_table"
 ANSWERS_PATH = "./data/answers/answers.jsonl"
 CHUNK_SIZE = 100
 
@@ -66,6 +65,7 @@ def create_dataframe(
                 "chunk": chunk,
                 "metadata": metadata,
                 "processed_at": datetime.now(),
+                "processed_dt": datetime.now().strftime("%Y-%m-%d"),
                 "embeddings": embedding,
             }
             for id_val, chunk, metadata, embedding in zip(
@@ -84,12 +84,12 @@ def deduplicate_data(df: DataFrame) -> DataFrame:
         .groupBy("id")
         .agg(
             F.first("processed_at").alias("processed_at"),
+            F.first("processed_dt").alias("processed_dt"),
             F.first("chunk").alias("chunk"),
             F.first("metadata").alias("metadata"),
             F.first("embeddings").alias("embeddings"),
         )
     )
-    print(f"✅ Deduplicated DataFrame in {OUTPUT_PATH}")
     return df
 
 
@@ -126,7 +126,12 @@ def main() -> None:
     df = create_dataframe(ids, chunks, metadatas, embeddings)
 
     # Save DataFrame to Delta table
-    df.write.format("delta").mode("append").save(OUTPUT_PATH)
+    (
+        df.write.format("delta")
+        .mode("append")
+        .partitionBy("processed_dt")
+        .save(OUTPUT_PATH)
+    )
     print(f"✅ Saved Delta table in {OUTPUT_PATH}")
 
     df_loaded = spark.read.format("delta").load(OUTPUT_PATH)
