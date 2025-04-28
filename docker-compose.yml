@@ -4,6 +4,10 @@ services:
       context: .
       dockerfile: ./Dockerfile
     container_name: app
+    environment:
+      - THREADS=${THREADS}
+      - DRIVER_MEMORY=${DRIVER_MEMORY}
+      - SHUFFLE_PARTITIONS=${SHUFFLE_PARTITIONS}
     volumes:
       - ./:/app/
     depends_on:

@@ -24,6 +24,7 @@ from .queries import QUERIES
 
 INPUT_PATH = "./data/input/sample2.pdf"
 OUTPUT_PATH = "./data/output/delta_table"
+JSONL_PATH = "./data/output/jsonl_file"
 ANSWERS_PATH = "./data/answers/answers.jsonl"
 CHUNK_SIZE = 100
 
@@ -110,6 +111,7 @@ def store_in_chromadb(df_loaded: DataFrame) -> Collection:
         metadatas=meta_list,
         embeddings=embed_list,
     )
+    # Only for development purposes
     print(f"✅ Upserted {df_loaded.count()} chunks in ChromaDB.")
 
     all_data = collection.get()
@@ -134,11 +136,20 @@ def main() -> None:
     )
     print(f"✅ Saved Delta table in {OUTPUT_PATH}")
 
+    # Load DataFrame from Delta table
     df_loaded = spark.read.format("delta").load(OUTPUT_PATH)
 
     df_deduplicated = deduplicate_data(df_loaded)
     print(f"✅ Deduplicated DataFrame in {OUTPUT_PATH}")
-    print(df_deduplicated.show(5))
+
+    # Save DataFrame as JSONL file for development purposes
+    (
+        df_deduplicated.repartition(1)
+        .write.format("json")
+        .mode("overwrite")
+        .save(JSONL_PATH)
+    )
+    print(f"✅ Saved JSONL file in {JSONL_PATH}")
 
     collection = store_in_chromadb(df_deduplicated)
 
