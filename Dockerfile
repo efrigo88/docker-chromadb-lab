@@ -1,8 +1,7 @@
-FROM --platform=linux/amd64 python:3.10-slim
+FROM python:3.10-slim
 
 # Set environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
-    PYSPARK_PYTHON=python3
+ENV PYSPARK_PYTHON=python3
 
 # Install Java 17 and minimal OS deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -10,7 +9,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
     git \
+    procps \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME based on architecture
+RUN if [ "$(uname -m)" = "aarch64" ]; then \
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64; \
+    else \
+    export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64; \
+    fi && \
+    echo "export JAVA_HOME=$JAVA_HOME" >> /etc/profile.d/java.sh
 
 # Set working directory
 WORKDIR /app

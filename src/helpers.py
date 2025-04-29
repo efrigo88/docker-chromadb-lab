@@ -8,7 +8,7 @@ import pyspark.sql.types as T
 from chromadb.config import Settings
 from docling.datamodel.document import InputDocument
 from docling.document_converter import DocumentConverter
-from sentence_transformers import SentenceTransformer
+from langchain_ollama import OllamaEmbeddings
 
 # Define schema
 schema = T.StructType(
@@ -125,22 +125,22 @@ def get_metadata(
 
 def get_embeddings(
     chunks: List[str],
-    model: SentenceTransformer,
+    model: OllamaEmbeddings,
 ) -> List[List[float]]:
-    """Get embeddings for a list of chunks using a specified model."""
-    return model.encode(chunks).tolist()
+    """Get embeddings for a list of chunks using Ollama embeddings."""
+    return model.embed_documents(chunks)
 
 
 def prepare_queries(
     collection: chromadb.Collection,
-    model: SentenceTransformer,
+    model: OllamaEmbeddings,
     queries: List[str],
 ) -> List[Dict[str, Any]]:
     """Run queries and prepare results in json format."""
     all_results = []
 
     for query in queries:
-        query_embedding = model.encode(query).tolist()
+        query_embedding = model.embed_documents([query])[0]
         results = collection.query(
             query_embeddings=[query_embedding], n_results=3
         )

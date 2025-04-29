@@ -1,7 +1,9 @@
+import os
 from datetime import datetime
 from typing import List, Dict, Any, Tuple
+
 from chromadb import Collection
-from sentence_transformers import SentenceTransformer
+from langchain_ollama import OllamaEmbeddings
 import pyspark.sql.functions as F
 from pyspark.sql import DataFrame
 
@@ -34,7 +36,7 @@ def process_document() -> Tuple[
     List[str],
     List[Dict[str, Any]],
     List[List[float]],
-    SentenceTransformer,
+    OllamaEmbeddings,
 ]:
     """Process PDF and generate embeddings."""
     doc = parse_pdf(INPUT_PATH)
@@ -46,7 +48,9 @@ def process_document() -> Tuple[
     metadatas = get_metadata(chunks, doc, INPUT_PATH)
     print("✅ Chunks, IDs and Metadatas generated.")
 
-    model = SentenceTransformer("all-MiniLM-L6-v2")
+    model = OllamaEmbeddings(
+        model="nomic-embed-text", base_url=f"http://{os.getenv('OLLAMA_HOST')}"
+    )
     embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")
     return ids, chunks, metadatas, embeddings, model
