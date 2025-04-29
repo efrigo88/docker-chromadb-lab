@@ -49,7 +49,7 @@ def process_document() -> Tuple[
     print("✅ Chunks, IDs and Metadatas generated.")
 
     model = OllamaEmbeddings(
-        model="nomic-embed-text", base_url=f"http://{os.getenv('OLLAMA_HOST')}"
+        model="nomic-embed-text", base_url=os.getenv("OLLAMA_HOST")
     )
     embeddings = get_embeddings(chunks, model)
     print("✅ Embeddings generated.")

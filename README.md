@@ -1,6 +1,6 @@
 # PDF Text Analysis with ChromaDB
 
-This project processes PDF documents, extracts text, and performs semantic search using ChromaDB and Sentence Transformers.
+This project processes PDF documents, extracts text, and performs semantic search using ChromaDB and Ollama embeddings.
 
 ## Project Structure
 
@@ -18,6 +18,7 @@ This project processes PDF documents, extracts text, and performs semantic searc
 │   └── main.py              # Main script
 ├── docker-compose.yml       # Docker Compose configuration
 ├── Dockerfile               # Docker configuration
+├── pull_model.sh            # Script to pull Ollama model
 ├── requirements.txt         # Python dependencies
 └── README.md                # This file
 ```
@@ -53,7 +54,20 @@ This project processes PDF documents, extracts text, and performs semantic searc
    docker compose up -d --build
    ```
 
-4. View logs:
+4. Pull the Ollama model:
+
+   ```bash
+   chmod +x pull_model.sh
+   ./pull_model.sh
+   ```
+
+   This script will:
+
+   - Start all containers
+   - Wait for Ollama service to be ready
+   - Pull the required model (nomic-embed-text)
+
+5. View logs:
    ```bash
    make logs
    ```
@@ -111,3 +125,7 @@ If you encounter connection issues:
 1. Check if ChromaDB is running: `make ps`
 2. View logs: `make logs`
 3. Rebuild containers: `make rebuild`
+4. If Ollama model is not available, run the pull script again:
+   ```bash
+   ./pull_model.sh
+   ```
