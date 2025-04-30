@@ -32,6 +32,10 @@ COPY pyproject.toml .
 # Install dependencies using uv without virtual environment
 RUN uv pip install --system -e .
 
+# Create directories in EFS mount point
+RUN mkdir -p /chromadb/delta_table /chromadb/jsonl_file && \
+    chown -R 1000:1000 /chromadb
+
 # Copy the rest of the application
 COPY . .
 

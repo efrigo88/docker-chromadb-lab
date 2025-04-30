@@ -24,10 +24,11 @@ from .helpers import (
 
 from .queries import QUERIES
 
+# Update paths to use EFS mount point
 INPUT_PATH = "./data/input/sample2.pdf"
-OUTPUT_PATH = "./data/output/delta_table"
-JSONL_PATH = "./data/output/jsonl_file"
-ANSWERS_PATH = "./data/answers/answers.jsonl"
+OUTPUT_PATH = "/chromadb/delta_table"
+JSONL_PATH = "/chromadb/jsonl_file"
+ANSWERS_PATH = "/chromadb/answers.jsonl"
 CHUNK_SIZE = 100
 
 

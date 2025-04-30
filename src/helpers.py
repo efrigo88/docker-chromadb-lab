@@ -54,7 +54,12 @@ def get_client() -> chromadb.HttpClient:
     return chromadb.HttpClient(
         host="chroma",
         port=8000,
-        settings=Settings(allow_reset=True, anonymized_telemetry=False),
+        settings=Settings(
+            persist_directory="/chromadb",
+            is_persistent=True,
+            allow_reset=True,
+            anonymized_telemetry=False,
+        ),
     )
 
 
