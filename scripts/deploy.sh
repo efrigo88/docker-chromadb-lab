@@ -39,28 +39,7 @@ docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION
 docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG}
 
 echo "✅ Deployment completed successfully!"
-
-# Get Terraform outputs
-cd infra
-SUBNET_ID=$(terraform output -json subnet_ids | jq -r '.[0]')
-SECURITY_GROUP_ID=$(terraform output -raw security_group_id)
-TASK_DEFINITION_ARN=$(terraform output -raw task_definition_arn)
-cd ..
-
-# Instructions for running ECS task
 echo "
-📋 To run the ECS task, use the following command:
-
-aws ecs run-task \\
-  --region ${AWS_REGION} \\
-  --cluster data-pipeline-cluster \\
-  --task-definition ${TASK_DEFINITION_ARN} \\
-  --launch-type FARGATE \\
-  --network-configuration \"awsvpcConfiguration={subnets=[${SUBNET_ID}],securityGroups=[${SECURITY_GROUP_ID}],assignPublicIp=ENABLED}\"
-
-📋 To monitor the task status, use:
-
-aws ecs describe-tasks --cluster data-pipeline-cluster --tasks <task-id>
-
-Note: Replace <task-id> with the task ID from the run-task command output.
+📋 To run the ECS task, use:
+./scripts/run_ecs_task.sh
 "

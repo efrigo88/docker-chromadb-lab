@@ -48,8 +48,17 @@ logs/
 .DS_Store
 Thumbs.db
 
-.cursor/
-
 # Delta table
 # Delta table output
 /data/output/
+
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+.terraform.tfstate.lock.info
+terraform.tfstate.backup
+terraform.tfstate
+myplan
+
+.cursor/
