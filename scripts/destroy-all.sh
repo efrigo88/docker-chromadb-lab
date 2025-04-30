@@ -29,6 +29,14 @@ aws ecr batch-delete-image \
 # Change to infra directory
 cd infra
 
+# Initialize Terraform if needed
+echo "🔧 Initializing Terraform..."
+terraform init
+
+# Destroy all infrastructure
+echo "🗑️  Destroying all infrastructure..."
+terraform destroy -auto-approve
+
 echo "🧹 Cleaning up local Terraform state files..."
 find . -type d -name ".terraform" -exec rm -rf {} +
 find . -type d -name "terraform.tfstate.d" -exec rm -rf {} +
